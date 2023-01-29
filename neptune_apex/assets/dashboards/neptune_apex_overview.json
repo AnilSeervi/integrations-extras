@@ -1,6 +1,6 @@
 {
     "title": "Neptune Apex",
-    "description": "Neptune Apex Default Dashboard",
+    "description": "",
     "widgets": [
         {
             "id": 5161208912793882,
@@ -26,7 +26,6 @@
                 "title": "Neptune Collection Status",
                 "title_size": "16",
                 "title_align": "left",
-                "time": {},
                 "type": "check_status",
                 "check": "neptune_apex.can_connect",
                 "grouping": "cluster",
@@ -51,7 +50,6 @@
                 "title": "Outlet Logs",
                 "title_size": "16",
                 "title_align": "left",
-                "time": {},
                 "type": "event_timeline",
                 "query": "source:neptune_apex",
                 "tags_execution": "and"
@@ -69,7 +67,6 @@
                 "title": "Neptune Outlog Collection Status",
                 "title_size": "16",
                 "title_align": "left",
-                "time": {},
                 "type": "check_status",
                 "check": "neptune_apex.can_connect",
                 "grouping": "cluster",
@@ -168,16 +165,15 @@
                 "title": "Outlet Logs",
                 "title_size": "16",
                 "title_align": "left",
-                "time": {},
                 "requests": [
                     {
                         "query": {
-                            "data_source": "event_stream",
                             "query_string": "source:neptune_apex",
+                            "data_source": "event_stream",
                             "event_size": "l"
                         },
-                        "response_format": "event_list",
-                        "columns": []
+                        "columns": [],
+                        "response_format": "event_list"
                     }
                 ],
                 "type": "list_stream"
@@ -351,7 +347,6 @@
                 "title": "Outlet States",
                 "title_size": "16",
                 "title_align": "left",
-                "time": {},
                 "type": "query_table",
                 "requests": [
                     {
@@ -397,7 +392,6 @@
                     "value",
                     "sum"
                 ],
-                "time": {},
                 "type": "timeseries",
                 "requests": [
                     {
@@ -406,6 +400,7 @@
                                 "formula": "query1"
                             }
                         ],
+                        "response_format": "timeseries",
                         "queries": [
                             {
                                 "query": "avg:neptune_apex.outlet.usage.watts{$controller_name,$controller_serial,$controller_name,$controller_serial,outlet_type:outlet} by {controller_hardware,controller_serial,device_id,outlet_type,name}",
@@ -413,7 +408,6 @@
                                 "name": "query1"
                             }
                         ],
-                        "response_format": "timeseries",
                         "style": {
                             "palette": "semantic",
                             "line_type": "solid",
@@ -423,8 +417,8 @@
                     }
                 ],
                 "yaxis": {
-                    "scale": "log",
-                    "include_zero": false
+                    "include_zero": false,
+                    "scale": "log"
                 }
             },
             "layout": {
@@ -449,7 +443,6 @@
                     "value",
                     "sum"
                 ],
-                "time": {},
                 "type": "timeseries",
                 "requests": [
                     {
@@ -458,6 +451,7 @@
                                 "formula": "query1"
                             }
                         ],
+                        "response_format": "timeseries",
                         "queries": [
                             {
                                 "query": "avg:neptune_apex.outlet.usage.amps{$controller_name,$controller_serial,$controller_name,$controller_serial,outlet_type:outlet} by {controller_hardware,controller_serial,device_id,outlet_type,name}",
@@ -465,7 +459,6 @@
                                 "name": "query1"
                             }
                         ],
-                        "response_format": "timeseries",
                         "style": {
                             "palette": "semantic",
                             "line_type": "solid",
@@ -486,80 +479,40 @@
             }
         },
         {
-            "id": 4016899066984584,
+            "id": 7197439161569126,
             "definition": {
-                "title": "Skimmer Usage - Watts (purple) vs Amps (red)",
+                "title": "Power Usage",
                 "title_size": "16",
                 "title_align": "left",
-                "show_legend": true,
-                "legend_layout": "auto",
-                "legend_columns": [
-                    "avg",
-                    "min",
-                    "max",
-                    "value",
-                    "sum"
-                ],
                 "time": {},
-                "type": "timeseries",
                 "requests": [
                     {
+                        "response_format": "scalar",
+                        "queries": [
+                            {
+                                "query": "avg:neptune_apex.outlet.usage.watts{$controller_name,$controller_serial,$controller_name,$controller_serial,outlet_type:outlet} by {name,outlet_type,controller_serial,controller_name}",
+                                "data_source": "metrics",
+                                "name": "query1",
+                                "aggregator": "sum"
+                            }
+                        ],
                         "formulas": [
                             {
                                 "formula": "query1"
                             }
                         ],
-                        "queries": [
-                            {
-                                "query": "avg:neptune_apex.outlet.usage.watts{$controller_name,$controller_serial,name:skimmer*,$controller_name,$controller_serial} by {controller_hardware,controller_serial,device_id,outlet_type,name}",
-                                "data_source": "metrics",
-                                "name": "query1"
-                            }
-                        ],
-                        "response_format": "timeseries",
                         "style": {
-                            "palette": "purple",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
-                    },
-                    {
-                        "on_right_yaxis": true,
-                        "formulas": [
-                            {
-                                "formula": "query0"
-                            }
-                        ],
-                        "queries": [
-                            {
-                                "data_source": "metrics",
-                                "name": "query0",
-                                "query": "avg:neptune_apex.outlet.usage.amps{$controller_name,$controller_serial,name:skimmer*,$controller_name,$controller_serial} by {controller_hardware,controller_serial,device_id,outlet_type,name}"
-                            }
-                        ],
-                        "response_format": "timeseries",
-                        "style": {
-                            "palette": "warm",
-                            "line_type": "solid",
-                            "line_width": "normal"
-                        },
-                        "display_type": "line"
+                            "palette": "datadog16"
+                        }
                     }
                 ],
-                "right_yaxis": {
-                    "scale": "linear",
-                    "include_zero": true,
-                    "label": "",
-                    "min": "auto",
-                    "max": "auto"
-                }
+                "type": "sunburst"
             },
             "layout": {
                 "x": 0,
                 "y": 12,
-                "width": 4,
-                "height": 2
+                "width": 6,
+                "height": 4
             }
         },
         {
@@ -603,8 +556,84 @@
                 ]
             },
             "layout": {
-                "x": 4,
+                "x": 6,
                 "y": 12,
+                "width": 4,
+                "height": 2
+            }
+        },
+        {
+            "id": 4016899066984584,
+            "definition": {
+                "title": "Skimmer Usage - Watts (purple) vs Amps (red)",
+                "title_size": "16",
+                "title_align": "left",
+                "show_legend": true,
+                "legend_layout": "auto",
+                "legend_columns": [
+                    "avg",
+                    "min",
+                    "max",
+                    "value",
+                    "sum"
+                ],
+                "type": "timeseries",
+                "requests": [
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query1"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "queries": [
+                            {
+                                "query": "avg:neptune_apex.outlet.usage.watts{$controller_name,$controller_serial,name:skimmer*,$controller_name,$controller_serial} by {controller_hardware,controller_serial,device_id,outlet_type,name}",
+                                "data_source": "metrics",
+                                "name": "query1"
+                            }
+                        ],
+                        "style": {
+                            "palette": "purple",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    },
+                    {
+                        "formulas": [
+                            {
+                                "formula": "query0"
+                            }
+                        ],
+                        "response_format": "timeseries",
+                        "on_right_yaxis": true,
+                        "queries": [
+                            {
+                                "query": "avg:neptune_apex.outlet.usage.amps{$controller_name,$controller_serial,name:skimmer*,$controller_name,$controller_serial} by {controller_hardware,controller_serial,device_id,outlet_type,name}",
+                                "data_source": "metrics",
+                                "name": "query0"
+                            }
+                        ],
+                        "style": {
+                            "palette": "warm",
+                            "line_type": "solid",
+                            "line_width": "normal"
+                        },
+                        "display_type": "line"
+                    }
+                ],
+                "right_yaxis": {
+                    "include_zero": true,
+                    "scale": "linear",
+                    "label": "",
+                    "min": "auto",
+                    "max": "auto"
+                }
+            },
+            "layout": {
+                "x": 6,
+                "y": 14,
                 "width": 4,
                 "height": 2
             }
